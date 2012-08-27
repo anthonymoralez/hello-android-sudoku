@@ -42,6 +42,8 @@ class Sudoku < Activity
       startActivity(Intent.new(self, About.class))
     elsif (view_id == R.id.new_game_button) 
       openNewGameDialog
+    elsif (view_id == R.id.exit_button) 
+      finish
     end
   end
 
