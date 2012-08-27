@@ -52,6 +52,9 @@ class Sudoku < Activity
     builder.setTitle(R.string.new_game_title)
     builder.setItems(R.array.difficulty) { |dialog, i| 
       Log.d("SUDOKU", "clicked on #{i}")
+      intent = Intent.new(this, Game.class)
+      intent.putExtra(Game.KEY_DIFFICULTY, i)
+      startActivity(intent)
     }
     builder.show
   end
