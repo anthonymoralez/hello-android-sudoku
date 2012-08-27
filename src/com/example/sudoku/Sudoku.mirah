@@ -1,9 +1,13 @@
 package com.example.sudoku
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.DialogInterface.OnClickListener as DI_OCL
 import android.content.Intent
 import android.util.Log
 import android.view.View.OnClickListener
+
 
 class Sudoku < Activity
   implements OnClickListener
@@ -20,7 +24,7 @@ class Sudoku < Activity
   def onCreateOptionsMenu(menu)
     super menu
     inflater = getMenuInflater
-    inflater.inflate(R.menu.menu, menu)
+    inflater.inflate(R.menu.menu, menu) 
     true
   end
 
@@ -35,9 +39,18 @@ class Sudoku < Activity
   def onClick(v)
     view_id = v.getId
     if (view_id == R.id.about_button) 
-      intent = Intent.new(self, About.class)
-      startActivity(intent)
+      startActivity(Intent.new(self, About.class))
+    elsif (view_id == R.id.new_game_button) 
+      openNewGameDialog
     end
   end
 
+  def openNewGameDialog
+    builder = AlertDialog.Builder.new(self) 
+    builder.setTitle(R.string.new_game_title)
+    builder.setItems(R.array.difficulty) { |dialog, i| 
+      Log.d("SUDOKU", "clicked on #{i}")
+    }
+    builder.show
+  end
 end
