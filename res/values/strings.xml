@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sudoku</string>
+
+    <!-- Main Menu -->
     <string name="main_title">Android Sudoku</string>
     <string name="continue_label">Continue</string>
     <string name="new_game_label">New Game</string>
     <string name="about_label">About</string>
     <string name="exit_label">Exit</string>
+
+    <!-- About -->
+    <string name="about_title">About Android Sudoku</string>
+    <string name="about_text">\
+Sudoku is a logic-based number placement puzzle.
+Starting with a partially completed 9x9 grid, the 
+objective is to fill the grid so that each 
+row, each column and each of the 3x3 boxes 
+(also called <i>blocks</i>) contains the digits
+1 to 9 exactly once.
+</string>
 </resources>
