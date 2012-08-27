@@ -17,6 +17,21 @@ class Sudoku < Activity
     findViewById(R.id.exit_button).setOnClickListener self
   end
 
+  def onCreateOptionsMenu(menu)
+    super menu
+    inflater = getMenuInflater
+    inflater.inflate(R.menu.menu, menu)
+    true
+  end
+
+  def onOptionsItemSelected(item)
+    if (item.getItemId == R.id.settings)
+      startActivity(Intent.new(self, Prefs.class))
+      return true
+    end
+    false
+  end
+
   def onClick(v)
     view_id = v.getId
     if (view_id == R.id.about_button) 
