@@ -5,7 +5,9 @@ import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Rect
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.util.Log
 
 class PuzzleView < View
@@ -26,7 +28,27 @@ class PuzzleView < View
     return select(@selX, @selY +1) if (key == KeyEvent.KEYCODE_DPAD_DOWN)
     return select(@selX-1, @selY) if (key == KeyEvent.KEYCODE_DPAD_LEFT)
     return select(@selX+1, @selY) if (key == KeyEvent.KEYCODE_DPAD_RIGHT)
+    return setSelectedTile(0) if (key == KeyEvent.KEYCODE_0 or key == KeyEvent.KEYCODE_SPACE)
+    return setSelectedTile(1) if (key == KeyEvent.KEYCODE_1)
+    return setSelectedTile(2) if (key == KeyEvent.KEYCODE_2)
+    return setSelectedTile(3) if (key == KeyEvent.KEYCODE_3)
+    return setSelectedTile(4) if (key == KeyEvent.KEYCODE_4)
+    return setSelectedTile(5) if (key == KeyEvent.KEYCODE_5)
+    return setSelectedTile(6) if (key == KeyEvent.KEYCODE_6)
+    return setSelectedTile(7) if (key == KeyEvent.KEYCODE_7)
+    return setSelectedTile(8) if (key == KeyEvent.KEYCODE_8)
+    return setSelectedTile(9) if (key == KeyEvent.KEYCODE_9)
     return super key, event
+  end
+
+  def onTouchEvent(event)
+    if (event.getAction != MotionEvent.ACTION_DOWN)
+      return super event
+    end
+    select(int(event.getX / @width), int(event.getY / @height))
+    @game.showKeypadOrError(@selX, @selY);
+    Log.d("PuzzleView", "onTouchEvent: #{@selX}, #{@selY}")
+    true
   end
 
   def select(x:int, y:int)
@@ -35,6 +57,16 @@ class PuzzleView < View
     @selY = Math.min(Math.max(y, 0),8)
     getRect(@selX, @selY, @selRect)
     invalidate(@selRect)
+    true
+  end
+
+  def setSelectedTile(tile:int)
+    if (@game.setTileIfValid(@selX, @selY, tile))
+      invalidate
+    else
+      Log.d("PuzzleView", "setSelectedTile: invalid #{tile}")
+      startAnimation(AnimationUtils.loadAnimation(@game, R.anim.shake))
+    end
     true
   end
 
@@ -103,6 +135,26 @@ class PuzzleView < View
     end
 
     #draw hints
+    colors = [ loadColor(R.color.puzzle_hint_0),
+               loadColor(R.color.puzzle_hint_1),
+               loadColor(R.color.puzzle_hint_2) ]
+    r = Rect.new
+    i = 0
+    while (i<9)
+      j = 0
+      while (j<9)
+        used =@game.getUsedTiles(i,j)
+        moves_left = 9 - used.size
+        if (moves_left < colors.size)
+          getRect(i, j, r)
+          canvas.drawRect(r,Paint(colors.get(moves_left)))
+        end
+        j+=1
+      end
+      i+=1 
+    end
+
+    
     #draw selection
     selected = loadColor(R.color.puzzle_selected)
     canvas.drawRect(@selRect, selected)

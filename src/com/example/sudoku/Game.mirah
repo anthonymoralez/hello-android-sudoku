@@ -2,7 +2,10 @@ package com.example.sudoku
 
 import android.app.Activity
 import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import java.util.ArrayList
+import java.util.HashSet
 
 class Game < Activity
   def getPuzzle(diff:int)
@@ -63,6 +66,7 @@ class Game < Activity
       @used.add(x_used)
       x+=1
     end
+    Log.d("Game", "usedtiles: #{@used}")
   end
 
   def onCreate(state)
@@ -80,5 +84,36 @@ class Game < Activity
 
   def getTileString(x:int, y:int)
     @puzzle.getTileString(x,y)
+  end
+
+  def showKeypadOrError(x:int, y:int)
+    tiles = getUsedTiles(x,y)
+    if (tiles.size == 9)
+      toast = Toast.makeText(self, R.string.no_moves_label, Toast.LENGTH_SHORT)
+      toast.setGravity(Gravity.CENTER, 0, 0)
+      toast.show
+    else
+      Keypad.new(self, tiles, @puzzle_view).show
+    end
+    true
+  end
+
+  def setTileIfValid(x:int, y:int, value:int)
+    tiles = getUsedTiles(x, y)
+    if (value != 0)
+      for tile in tiles
+        if Integer(tile) == Integer.valueOf(value)
+          return false
+        end
+      end
+    end
+    @puzzle.setTile(x,y,value)
+    calculateUsedTiles
+    true
+  end
+
+  def getUsedTiles(x:int, y:int)
+    x_used = ArrayList(@used.get(x))
+    HashSet(x_used.get(y))
   end
 end

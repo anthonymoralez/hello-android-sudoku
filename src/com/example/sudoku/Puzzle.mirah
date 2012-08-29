@@ -8,6 +8,9 @@ import android.util.Log
 
 class Puzzle
   class Tile
+    def initialize(v:int)
+      @value = Integer.valueOf v
+    end
     def initialize(v:Integer)
       @value = v
     end
@@ -70,7 +73,7 @@ class Puzzle
     j = starty
     while (i < startx + 3)
       while (j < starty + 3)
-        if (i == x && j == y)
+        if (i != x && j != y)
           tile = getTile i, j
           used.add(tile.value) if tile.is_used
         end
@@ -84,9 +87,12 @@ class Puzzle
   def getTile(x:int, y:int):Tile
     Tile(@values.get( y*9 +x))
   end
+  
+  def setTile(x:int, y:int, tile:int)
+    @values.set(y*9 +x, Tile.new(tile))
+  end
 
   def getTileString(x:int, y:int)
     getTile(x,y).to_s
   end
-
 end
