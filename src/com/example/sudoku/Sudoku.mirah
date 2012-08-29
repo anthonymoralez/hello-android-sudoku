@@ -48,13 +48,14 @@ class Sudoku < Activity
   end
 
   def openNewGameDialog
+    this=self
     builder = AlertDialog.Builder.new(self) 
     builder.setTitle(R.string.new_game_title)
     builder.setItems(R.array.difficulty) { |dialog, i| 
       Log.d("SUDOKU", "clicked on #{i}")
       intent = Intent.new(this, Game.class)
-      intent.putExtra(Game.KEY_DIFFICULTY, i)
-      startActivity(intent)
+      intent.putExtra(this.getResources.getString(R.string.difficulty_key), i)
+      this.startActivity(intent)
     }
     builder.show
   end

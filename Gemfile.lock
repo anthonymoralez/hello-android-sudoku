@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/mirah/mirah.git
-  revision: 8a492b2c6b5d669a8433320334957c2531c02c1f
-  specs:
-    mirah (0.1.0.dev-java)
-      bitescript (>= 0.0.8)
-
-GIT
   remote: https://github.com/mirah/pindah.git
   revision: 835604f0e5ae3eeb58e9475e92ef9ae7d8c7bdca
   specs:
@@ -16,12 +9,14 @@ GEM
   remote: http://rubygems.org/
   specs:
     bitescript (0.1.0)
+    mirah (0.0.12-java)
+      bitescript (>= 0.0.8)
     rake (0.9.2.2)
 
 PLATFORMS
   java
 
 DEPENDENCIES
-  mirah!
+  mirah
   pindah!
   rake
