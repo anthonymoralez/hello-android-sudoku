@@ -50,6 +50,8 @@ class Sudoku < Activity
     view_id = v.getId
     if (view_id == R.id.about_button) 
       startActivity(Intent.new(self, About.class))
+    elsif (view_id == R.id.continue_button)
+      startGame(getResources.getInteger(R.integer.continue_difficutly))
     elsif (view_id == R.id.new_game_button) 
       openNewGameDialog
     elsif (view_id == R.id.exit_button) 
@@ -62,11 +64,15 @@ class Sudoku < Activity
     builder = AlertDialog.Builder.new(self) 
     builder.setTitle(R.string.new_game_title)
     builder.setItems(R.array.difficulty) { |dialog, i| 
-      Log.d("SUDOKU", "clicked on #{i}")
-      intent = Intent.new(this, Game.class)
-      intent.putExtra(this.getResources.getString(R.string.difficulty_key), i)
-      this.startActivity(intent)
+      this.startGame(i)
     }
     builder.show
+  end
+
+  def startGame(diff:int):void
+      Log.d("SUDOKU", "clicked on #{diff}")
+      intent = Intent.new(self, Game.class)
+      intent.putExtra(getResources.getString(R.string.difficulty_key), diff)
+      startActivity(intent)
   end
 end

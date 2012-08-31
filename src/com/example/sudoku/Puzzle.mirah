@@ -35,13 +35,23 @@ class Puzzle
     end
   end
 
-  def initialize(values:List)
-    @values = ArrayList.new
-    for v in values
-      @values.add(Tile.new(Integer(v)))
+  def to_s
+    sb = StringBuilder.new
+    for v in @values
+      sb.append(String.valueOf(v))
     end
-    @t = @values.get(0)
-    Log.d("Puzzle", @values.toString)
+    sb.toString
+  end
+  
+  def from_s(s:String)
+    @values = ArrayList.new
+    for c in s.toCharArray
+      @values.add(Tile.new(Integer.valueOf(c - '0'.charAt(0))))
+    end
+  end
+
+  def initialize(s:String)
+    from_s(s)
   end
 
   def calculateUsedTiles(x:int, y:int)
@@ -92,7 +102,7 @@ class Puzzle
     @values.set(y*9 +x, Tile.new(tile))
   end
 
-  def getTileString(x:int, y:int)
+  def getTileString(x:int, y:int):String
     getTile(x,y).to_s
   end
 end

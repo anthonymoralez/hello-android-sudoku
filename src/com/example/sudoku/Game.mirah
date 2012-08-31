@@ -1,5 +1,6 @@
 package com.example.sudoku
 
+import android.content.Context
 import android.app.Activity
 import android.util.Log
 import android.view.Gravity
@@ -8,17 +9,29 @@ import java.util.ArrayList
 import java.util.HashSet
 
 class Game < Activity
+  def self.easy_puzzle
+    "360000000004230800000004200070460003820000014500013020001900000007048300000000045"
+  end
+  def self.medium_puzzle
+    "650000070000506000014000005007009000002314700000700800500000630000201000030000097"
+  end
+  def self.hard_puzzle
+    "009000000080605020501078000000000700706040102004000000000720903090301080000000600"
+  end
+
   def onCreate(state)
     super state
     Log.d("Game", "onCreate")
     @res = getResources
-    diff = getIntent.getIntExtra(@res.getString(R.string.difficulty_key), @res.getInteger(R.integer.easy_difficulty))
+    diff_key = @res.getString(R.string.difficulty_key)
+    diff = getIntent.getIntExtra(diff_key, @res.getInteger(R.integer.easy_difficulty))
     @puzzle = getPuzzle(diff)
     Log.d("Game", "got puzzle")
     calculateUsedTiles
     @puzzle_view = PuzzleView.new(self)
     setContentView(@puzzle_view)
     @puzzle_view.requestFocus
+    getIntent.putExtra(diff_key, @res.getInteger(R.integer.continue_difficutly))
   end
 
   def onResume()
@@ -29,49 +42,20 @@ class Game < Activity
   def onPause()
     super
     Music.stop(self)
+    getPreferences(Context.MODE_PRIVATE).edit.putString("puzzle", @puzzle.to_s).commit
   end
 
   def getPuzzle(diff:int)
-    if (diff == @res.getInteger(R.integer.easy_difficulty))
-      return Puzzle.new([ 3, 6, 0, 0, 0, 0, 0, 0, 0, 
-               0, 0, 4, 2, 3, 0, 8, 0, 0, 
-               0, 0, 0, 0, 0, 4, 2, 0, 0, 
-               0, 7, 0, 4, 6, 0, 0, 0, 3, 
-               8, 2, 0, 0, 0, 0, 0, 1, 4, 
-               5, 0, 0, 0, 1, 3, 0, 2, 0, 
-               0, 0, 1, 9, 0, 0, 0, 0, 0, 
-               0, 0, 7, 0, 4, 8, 3, 0, 0, 
-               0, 0, 0, 0, 0, 0, 0, 4, 5 ])
+    if (diff == @res.getInteger(R.integer.continue_difficutly))
+      return Puzzle.new(getPreferences(Context.MODE_PRIVATE).getString("puzzle", Game.easy_puzzle))
+    elsif (diff == @res.getInteger(R.integer.easy_difficulty))
+      return Puzzle.new(Game.easy_puzzle)
     elsif (diff == @res.getInteger(R.integer.medium_difficulty))
-      return Puzzle.new([ 6, 5, 0, 0, 0, 0, 0, 7, 0,
-               0, 0, 0, 5, 0, 6, 0, 0, 0, 
-               0, 1, 4, 0, 0, 0, 0, 0, 5, 
-               0, 0, 7, 0, 0, 9, 0, 0, 0, 
-               0, 0, 2, 3, 1, 4, 7, 0, 0, 
-               0, 0, 0, 7, 0, 0, 8, 0, 0, 
-               5, 0, 0, 0, 0, 0, 6, 3, 0, 
-               0, 0, 0, 2, 0, 1, 0, 0, 0, 
-               0, 3, 0, 0, 0, 0, 0, 9, 7 ])
+      return Puzzle.new(Game.medium_puzzle)
     elsif (diff == @res.getInteger(R.integer.hard_difficulty))
-      return Puzzle.new([ 0, 0, 9, 0, 0, 0, 0, 0, 0, 
-               0, 8, 0, 6, 0, 5, 0, 2, 0, 
-               5, 0, 1, 0, 7, 8, 0, 0, 0, 
-               0, 0, 0, 0, 0, 0, 7, 0, 0, 
-               7, 0, 6, 0, 4, 0, 1, 0, 2, 
-               0, 0, 4, 0, 0, 0, 0, 0, 0, 
-               0, 0, 0, 7, 2, 0, 9, 0, 3, 
-               0, 9, 0, 3, 0, 1, 0, 8, 0, 
-               0, 0, 0, 0, 0, 0, 6, 0, 0 ])
+      return Puzzle.new(Game.hard_puzzle)
     else
-      return Puzzle.new([ 3, 6, 0, 0, 0, 0, 0, 0, 0, 
-               0, 0, 4, 2, 3, 0, 8, 0, 0, 
-               0, 0, 0, 0, 0, 4, 2, 0, 0, 
-               0, 7, 0, 4, 6, 0, 0, 0, 3, 
-               8, 2, 0, 0, 0, 0, 0, 1, 4, 
-               5, 0, 0, 0, 1, 3, 0, 2, 0, 
-               0, 0, 1, 9, 0, 0, 0, 0, 0, 
-               0, 0, 7, 0, 4, 8, 3, 0, 0, 
-               0, 0, 0, 0, 0, 0, 0, 4, 5 ])
+      return Puzzle.new(Game.easy_puzzle)
     end
   end
 
@@ -92,7 +76,7 @@ class Game < Activity
     Log.d("Game", "usedtiles: #{@used}")
   end
 
-  def getTileString(x:int, y:int)
+  def getTileString(x:int, y:int):String
     @puzzle.getTileString(x,y)
   end
 
