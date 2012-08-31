@@ -8,9 +8,11 @@ class Music
 
   def self.play(context:Context, res:int)
     stop(context)
-    @@mp = MediaPlayer.create(context, res)
-    @@mp.setLooping(true)
-    @@mp.start
+    if (Prefs.getMusic(context))
+      @@mp = MediaPlayer.create(context, res)
+      @@mp.setLooping(true)
+      @@mp.start
+    end
   end
 
   def self.stop(context:Context)

@@ -135,25 +135,26 @@ class PuzzleView < View
     end
 
     #draw hints
-    colors = [ loadColor(R.color.puzzle_hint_0),
-               loadColor(R.color.puzzle_hint_1),
-               loadColor(R.color.puzzle_hint_2) ]
-    r = Rect.new
-    i = 0
-    while (i<9)
-      j = 0
-      while (j<9)
-        used =@game.getUsedTiles(i,j)
-        moves_left = 9 - used.size
-        if (moves_left < colors.size)
-          getRect(i, j, r)
-          canvas.drawRect(r,Paint(colors.get(moves_left)))
+    if (Prefs.getHints(getContext))
+      colors = [ loadColor(R.color.puzzle_hint_0),
+                 loadColor(R.color.puzzle_hint_1),
+                 loadColor(R.color.puzzle_hint_2) ]
+      r = Rect.new
+      i = 0
+      while (i<9)
+        j = 0
+        while (j<9)
+          used =@game.getUsedTiles(i,j)
+          moves_left = 9 - used.size
+          if (moves_left < colors.size)
+            getRect(i, j, r)
+            canvas.drawRect(r,Paint(colors.get(moves_left)))
+          end
+          j+=1
         end
-        j+=1
+        i+=1 
       end
-      i+=1 
     end
-
     
     #draw selection
     selected = loadColor(R.color.puzzle_selected)
