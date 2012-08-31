@@ -21,6 +21,16 @@ class Sudoku < Activity
     findViewById(R.id.exit_button).setOnClickListener self
   end
 
+  def onResume
+    super 
+    Music.play(self, R.raw.main)
+  end
+
+  def onPause
+    super 
+    Music.stop(self)
+  end
+
   def onCreateOptionsMenu(menu)
     super menu
     inflater = getMenuInflater

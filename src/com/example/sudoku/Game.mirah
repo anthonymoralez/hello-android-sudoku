@@ -8,6 +8,29 @@ import java.util.ArrayList
 import java.util.HashSet
 
 class Game < Activity
+  def onCreate(state)
+    super state
+    Log.d("Game", "onCreate")
+    @res = getResources
+    diff = getIntent.getIntExtra(@res.getString(R.string.difficulty_key), @res.getInteger(R.integer.easy_difficulty))
+    @puzzle = getPuzzle(diff)
+    Log.d("Game", "got puzzle")
+    calculateUsedTiles
+    @puzzle_view = PuzzleView.new(self)
+    setContentView(@puzzle_view)
+    @puzzle_view.requestFocus
+  end
+
+  def onResume()
+    super
+    Music.play(self, R.raw.game)
+  end
+
+  def onPause()
+    super
+    Music.stop(self)
+  end
+
   def getPuzzle(diff:int)
     if (diff == @res.getInteger(R.integer.easy_difficulty))
       return Puzzle.new([ 3, 6, 0, 0, 0, 0, 0, 0, 0, 
@@ -67,19 +90,6 @@ class Game < Activity
       x+=1
     end
     Log.d("Game", "usedtiles: #{@used}")
-  end
-
-  def onCreate(state)
-    super state
-    Log.d("Game", "onCreate")
-    @res = getResources
-    diff = getIntent.getIntExtra(@res.getString(R.string.difficulty_key), @res.getInteger(R.integer.easy_difficulty))
-    @puzzle = getPuzzle(diff)
-    Log.d("Game", "got puzzle")
-    calculateUsedTiles
-    @puzzle_view = PuzzleView.new(self)
-    setContentView(@puzzle_view)
-    @puzzle_view.requestFocus
   end
 
   def getTileString(x:int, y:int)
