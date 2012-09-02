@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Paint.Style
 import android.graphics.Rect
+import android.os.Bundle
+import android.os.Parcelable
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -11,6 +13,7 @@ import android.view.animation.AnimationUtils
 import android.util.Log
 
 class PuzzleView < View
+  def self.id; 42; end
   def initialize(context:Context)
     super context
     @selX = 0 
@@ -19,8 +22,23 @@ class PuzzleView < View
     @selRect = Rect.new
     setFocusable true
     setFocusableInTouchMode true
-    
+    setId(PuzzleView.id)
     Log.d("PuzzleView", "constructed")
+  end
+
+  def onSaveInstanceState
+    p = super
+    bundle = Bundle.new
+    bundle.putInt("selX", @selX)
+    bundle.putInt("selY", @selY)
+    bundle.putParcelable("viewState", p)
+    bundle
+  end
+
+  def onRestoreInstanceState(state:Parcelable)
+    bundle = Bundle(state)
+    select(bundle.getInt("selX"), bundle.getInt("selY"))
+    super bundle.getParcelable("viewState")
   end
 
   def onKeyDown(key, event)
