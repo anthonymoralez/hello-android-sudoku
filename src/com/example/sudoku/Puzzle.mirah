@@ -24,9 +24,6 @@ class Puzzle
       value != Integer.valueOf(0)
     end
     def toString
-      to_s
-    end
-    def to_s
       s = " "
       if is_used
         s = String.valueOf(@value) 
@@ -38,7 +35,8 @@ class Puzzle
   def to_s
     sb = StringBuilder.new
     for v in @values
-      sb.append(String.valueOf(v))
+      tile = Tile(v)
+      sb.append(tile.is_used ? tile.toString : "0") 
     end
     sb.toString
   end
@@ -103,6 +101,6 @@ class Puzzle
   end
 
   def getTileString(x:int, y:int):String
-    getTile(x,y).to_s
+    getTile(x,y).toString
   end
 end
